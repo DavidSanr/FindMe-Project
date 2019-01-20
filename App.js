@@ -20,11 +20,10 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      fetchingPosition: false,
-      latitude: 30.43301152,
-      longitude: -68.43301152,
+      fetchingPosition: false,      
       error: undefined,
       location: null,
+      coordinate:{latitude: 30.43301152,longitude: -68.43301152},
       endLatitude:18.43314801,
       endLongitude:-69.97395073
     }
@@ -50,10 +49,10 @@ export default class App extends Component {
   findCoordinates = () => {
     navigator.geolocation.getCurrentPosition(
       position => {
-        // this.setState({
-        //   latitude: position.coords.latitude,
-        //   longitude: position.coords.longitude
+      this.setState({
+        coordinate : {latitude:position.coords.latitude,longitude:position.coords.longitude}
 
+      })
         var positionA = {coordinate : {latitude:position.coords.latitude,longitude:position.coords.longitude}};
         var positionB = {coordinate:{latitude:this.state.endLatitude,longitude:this.state.endLongitude}};
         var result = calculateDistance(positionA,positionB);
@@ -73,7 +72,7 @@ export default class App extends Component {
 
       
       error => Alert.alert(error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
     );
 
 
@@ -82,11 +81,14 @@ export default class App extends Component {
 
 
 
-  // componentWillUpdate() {
+   componentDidUpdate(prevProps,prevState) {
 
-    
+    if(!equal(this.state.coordinate, prevState.state.coordinate)) //   
+    {
+         render();
+    }    
 
-  // }
+   }
 
   render() {
 
@@ -96,8 +98,8 @@ export default class App extends Component {
       
         <MapView provider={PROVIDER_GOOGLE} style={styles.container}
           initialRegion={{
-            latitude: this.state.latitude,
-            longitude: this.state.longitude,
+            latitude: this.state.coordinate.latitude,
+            longitude: this.state.coordinate.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421
 
