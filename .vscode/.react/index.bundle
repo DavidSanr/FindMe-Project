@@ -85638,13 +85638,6 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
 
       _this.findCoordinates = function () {
         navigator.geolocation.getCurrentPosition(function (position) {
-          _this.setState({
-            coordinate: {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
-            }
-          });
-
           var positionA = {
             coordinate: {
               latitude: position.coords.latitude,
@@ -85653,8 +85646,8 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           };
           var positionB = {
             coordinate: {
-              latitude: _this.state.endLatitude,
-              longitude: _this.state.endLongitude
+              latitude: _this.state.endCoordinate.endLatitude,
+              longitude: _this.state.endCoordinate.endLongitude
             }
           };
           var result = (0, _mapUtilis.calculateDistance)(positionA, positionB);
@@ -85681,12 +85674,11 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         fetchingPosition: false,
         error: undefined,
         location: null,
-        coordinate: {
-          latitude: 30.43301152,
-          longitude: -68.43301152
-        },
-        endLatitude: 18.43314801,
-        endLongitude: -69.97395073
+        region: null,
+        endCoordinate: {
+          endLatitude: 18.43314801,
+          endLongitude: -69.97395073
+        }
       };
       return _this;
     }
@@ -85724,11 +85716,34 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         }, null, this);
       }
     }, {
-      key: "componentDidUpdate",
-      value: function componentDidUpdate(prevProps, prevState) {
-        if (!equal(this.state.coordinate, prevState.state.coordinate)) {
-            render();
+      key: "getInitialState",
+      value: function getInitialState() {
+        return {
+          region: {
+            latitude: 28.43301152,
+            longitude: -68.95301152
           }
+        };
+      }
+    }, {
+      key: "onRegionChange",
+      value: function onRegionChange(region) {
+        this.setState({
+          region: region
+        });
+      }
+    }, {
+      key: "alDelta",
+      value: function alDelta(lat, long, accuracy) {
+        var oneDegreeOfLatitudeInMeters = 111.32 * 1000;
+        var latDelta = accuracy / oneDegreeOfLatitudeInMeters;
+        var longDelta = accuracy / (oneDegreeOfLatitudeInMeters * Math.cos(lat * (Math.PI / 180)));
+        return Region = {
+          lat: lat,
+          long: long,
+          latDelta: latDelta,
+          longDelta: longDelta
+        };
       }
     }, {
       key: "render",
@@ -85736,29 +85751,39 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         return _react.default.createElement(_react.default.Fragment, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 97
+            lineNumber: 103
           }
         }, _react.default.createElement(_reactNativeMaps.default, {
           provider: _reactNativeMaps.PROVIDER_GOOGLE,
           style: styles.container,
-          initialRegion: {
-            latitude: this.state.coordinate.latitude,
-            longitude: this.state.coordinate.longitude,
+          initialRegion: this.state.region,
+          showsUserLocation: true,
+          onRegionChange: this.onRegionChange,
+          showsMyLocationButton: true,
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 105
+          }
+        }, _react.default.createElement(_reactNativeMaps.Circle, {
+          center: {
+            latitude: this.state.endCoordinate.endLatitude,
+            longitude: this.state.endCoordinate.endLongitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421
           },
+          radius: 10,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 99
+            lineNumber: 111
           }
-        }), _react.default.createElement(_reactNative.Button, {
+        })), _react.default.createElement(_reactNative.Button, {
           onPress: this.findCoordinates,
           title: "Check Location",
           color: "#841584",
           accessibilityLabel: "",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 109
+            lineNumber: 130
           }
         }));
       }

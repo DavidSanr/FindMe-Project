@@ -1,14 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
 
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Button, Alert, GeoOptions } from 'react-native';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Circle } from 'react-native-maps';
 import {calculateDistance} from './utils/mapUtilis';
 // import modalUserSettings from './modals/UserSettings'
 
@@ -23,13 +16,14 @@ export default class App extends Component {
       fetchingPosition: false,      
       error: undefined,
       location: null,
-      coordinate:{latitude: 30.43301152,longitude: -68.43301152},
-      endLatitude:18.43314801,
-      endLongitude:-69.97395073
+      region: null,
+      endCoordinate :{endLatitude:18.43314801,
+      endLongitude:-69.97395073}
     }
 
   }
 
+  
   async _checkPermissionGps() {
     if (Platform.OS !== 'android') {
         return Promise.resolve(true);
@@ -45,16 +39,32 @@ export default class App extends Component {
         });
 }
 
-  
-  findCoordinates = () => {
+
+getInitialState() {
+  return {
+    region: {
+      latitude: 28.43301152,
+      longitude: -68.95301152
+      
+    },
+  };
+}
+
+onRegionChange(region) {
+  this.setState({ region: region});
+}
+
+
+
+
+  findCoordinates =  () => {
     navigator.geolocation.getCurrentPosition(
       position => {
-      this.setState({
-        coordinate : {latitude:position.coords.latitude,longitude:position.coords.longitude}
-
-      })
+      // this.setState({
+      //     region : {position.coords.latitude,position.coords.longitude}
+      // })
         var positionA = {coordinate : {latitude:position.coords.latitude,longitude:position.coords.longitude}};
-        var positionB = {coordinate:{latitude:this.state.endLatitude,longitude:this.state.endLongitude}};
+        var positionB = {coordinate:{latitude:this.state.endCoordinate.endLatitude,longitude:this.state.endCoordinate.endLongitude}};
         var result = calculateDistance(positionA,positionB);
         if(result <= 10){
           Alert.alert("Llegaste","Estas en el punto acordado");
@@ -77,19 +87,15 @@ export default class App extends Component {
 
 
 
+  };
+
+  alDelta(lat,long,accuracy){
+    const oneDegreeOfLatitudeInMeters = 111.32 * 1000;
+    const latDelta =accuracy / oneDegreeOfLatitudeInMeters;
+    const longDelta = accuracy / (oneDegreeOfLatitudeInMeters * Math.cos(lat * (Math.PI / 180)));
+    return Region = {lat,long,latDelta, longDelta}
+
   }
-
-
-
-   componentDidUpdate(prevProps,prevState) {
-
-    if(!equal(this.state.coordinate, prevState.state.coordinate)) //   
-    {
-         render();
-    }    
-
-   }
-
   render() {
 
     return (
@@ -97,14 +103,29 @@ export default class App extends Component {
       <React.Fragment>
       
         <MapView provider={PROVIDER_GOOGLE} style={styles.container}
-          initialRegion={{
-            latitude: this.state.coordinate.latitude,
-            longitude: this.state.coordinate.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
+          initialRegion={this.state.region}
+          showsUserLocation = {true}
+          onRegionChange = {this.onRegionChange}
+          showsMyLocationButton
+        >
+        <Circle
+        center = {{
+          latitude: this.state.endCoordinate.endLatitude,
+          longitude: this.state.endCoordinate.endLongitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
 
-          }}
-        ></MapView>
+        }
+      }
+
+      radius = {10}
+        >
+
+
+
+        </Circle>
+        
+        </MapView>
 
         <Button
           onPress={this.findCoordinates}
