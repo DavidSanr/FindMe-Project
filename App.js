@@ -23,12 +23,65 @@ export default class App extends Component {
       fetchingPosition: false,
       error: undefined,
       location: null,
-      region: { longitude: -69.95420197024941, latitude: 18.437380919762777 ,latitudeDelta: 0.00041889339744471954,
-        longitudeDelta: 0.00034030526876449585},
-      endCoordinate: { endLatitude: 18.43314801, endLongitude: -69.97395073 }
-      
+      region: null,
+      endCoordinate: { endLatitude: 18.43314801, endLongitude: -69.97395073 },
+      setRegion : {}
+
     };
+
+    
   }
+
+  componentDidMount() {
+
+
+    this.setState({
+
+      region: {
+        longitude: -69.95420197024941, latitude: 18.437380919762777, latitudeDelta: 0.00041889339744471954,
+        longitudeDelta: 0.00034030526876449585
+      }
+    });
+
+    var config = {
+      apiKey: "AIzaSyBXGRqhPagGIcYgDd4mULMmWLCTy4gVeww",
+      authDomain: "testproject-75e4d.firebaseapp.com",
+      databaseURL: "https://testproject-75e4d.firebaseio.com",
+      projectId: "testproject-75e4d",
+      storageBucket: "testproject-75e4d.appspot.com",
+      messagingSenderId: "198353341777",
+      appId: "1:198353341777:android:4826b5f1605893f1"
+    };
+
+    // if (!firebase.app.length) {
+    //   firebase.initializeApp(config,'testApp');
+    // }
+    firebase.initializeApp(config, 'testApp');
+
+    // var data = firebase.app("testApp")
+    //   .database()
+    //   .ref('location/')
+    //   .then(snapshot => {
+    //     snapshot.val()
+
+
+
+    //   });
+
+
+    
+
+
+
+
+
+
+  }
+
+
+
+
+
 
   async _checkPermissionGps() {
     if (Platform.OS !== "android") {
@@ -45,33 +98,24 @@ export default class App extends Component {
       console.log("Permission result:", result);
       return result === true || result === PermissionsAndroid.RESULTS.GRANTED;
     });
-  }
+  };
 
   onRegionChange(region) {
-    this.setState({ region});
-  }
-  
+    this.setState({ region });
+  };
 
-  setLocation(region) {
-    // if (!firebase.app.length) {
-    //   firebase.initializeApp(this.config);
-    // }
-    configDatabase = {
-      databaseURL: "https://testproject-75e4d.firebaseio.com/",
-      projectId: "testproject-75e4d",
-      apiKey: "AIzaSyBXGRqhPagGIcYgDd4mULMmWLCTy4gVeww",
-      appId: "1:198353341777:android:4826b5f1605893f1",
-      messagingSenderId: "1:198353341777:android:4826b5f1605893f1",
-      storageBucket: "1:198353341777:android:4826b5f1605893f1"
-    };
-    // firebase.initializeApp(configDatabase);
-    const projecttest = firebase.app('projecttest');
+ 
+  setLocation(data){
 
-    projecttest
+
+    var setRegion = data.nativeEvent;
+
+
+   firebase.app("testApp")
       .database()
       .ref("location/")
       .set({
-        region
+        setRegion
       })
       .then(data => {
         //success callback
@@ -82,8 +126,8 @@ export default class App extends Component {
         console.log("error ", error);
       });
 
-      
-  }
+
+  };
 
   findCoordinates = () => {
     navigator.geolocation.getCurrentPosition(
@@ -138,7 +182,8 @@ export default class App extends Component {
           initialRegion={this.state.region}
           showsUserLocation={true}
           onRegionChangeComplete={this.onRegionChange.bind(this)}
-          showsMyLocationButton
+          showsMyLocationButton= {true}
+          onLongPress= { this.setLocation.bind(this)}
         >
           <Circle
             center={{
@@ -159,10 +204,10 @@ export default class App extends Component {
         />
 
         <Button
-          onPress={this.setLocation}
+          onPress={this.setLocation.bind(this)}
           title="set Location"
           color="#541584"
-          accessibilityLabel="" 
+          accessibilityLabel=""
         />
       </React.Fragment>
     );
