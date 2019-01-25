@@ -85652,8 +85652,8 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           };
           var positionB = {
             coordinate: {
-              latitude: _this.state.endCoordinate.endLatitude,
-              longitude: _this.state.endCoordinate.endLongitude
+              latitude: _this.state.endCoordinate.Latitude,
+              longitude: _this.state.endCoordinate.Longitude
             }
           };
           var result = (0, _mapUtilis.calculateDistance)(positionA, positionB);
@@ -85669,7 +85669,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           return _reactNative.Alert.alert(error.message);
         }, {
           enableHighAccuracy: false,
-          timeout: 20000,
+          timeout: 6000,
           maximumAge: 1000
         });
       };
@@ -85680,8 +85680,8 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         location: null,
         region: null,
         endCoordinate: {
-          endLatitude: 18.43314801,
-          endLongitude: -69.97395073
+          Latitude: 18.43314801,
+          Longitude: -69.97395073
         },
         setRegion: {}
       };
@@ -85691,6 +85691,8 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
     (0, _createClass2.default)(App, [{
       key: "componentDidMount",
       value: function componentDidMount() {
+        var _this2 = this;
+
         this.setState({
           region: {
             longitude: -69.95420197024941,
@@ -85710,6 +85712,17 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         };
 
         _reactNativeFirebase.default.initializeApp(config, 'testApp');
+
+        var data = _reactNativeFirebase.default.app("testApp").database().ref('location/setRegion').once('value').then(function (snapshot) {
+          var regionValue = snapshot.val();
+          console.log(regionValue.coordinate);
+
+          _this2.setState({
+            endCoordinate: _this2.regionValue.coordinate
+          });
+
+          debugger;
+        });
       }
     }, {
       key: "_checkPermissionGps",
@@ -85733,7 +85746,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
                 };
                 return _context.abrupt("return", PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, rationale).then(function (result) {
                   console.log("Permission result:", result);
-                  return result === true || result === PermissionsAndroid.RESULTS.GRANTED;
+                  return result === false || result === PermissionsAndroid.RESULTS.GRANTED;
                 }));
 
               case 4:
@@ -85782,7 +85795,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
         return _react.default.createElement(_react.default.Fragment, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 178
+            lineNumber: 185
           }
         }, _react.default.createElement(_reactNativeMaps.default, {
           provider: _reactNativeMaps.PROVIDER_GOOGLE,
@@ -85794,19 +85807,19 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           onLongPress: this.setLocation.bind(this),
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 179
+            lineNumber: 186
           }
         }, _react.default.createElement(_reactNativeMaps.Circle, {
           center: {
-            latitude: this.state.endCoordinate.endLatitude,
-            longitude: this.state.endCoordinate.endLongitude,
+            latitude: this.state.endCoordinate.Latitude,
+            longitude: this.state.endCoordinate.Longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421
           },
           radius: 10,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 188
+            lineNumber: 195
           }
         })), _react.default.createElement(_reactNative.Button, {
           onPress: this.findCoordinates,
@@ -85815,7 +85828,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           accessibilityLabel: "",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 199
+            lineNumber: 206
           }
         }), _react.default.createElement(_reactNative.Button, {
           onPress: this.setLocation.bind(this),
@@ -85824,7 +85837,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           accessibilityLabel: "",
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 206
+            lineNumber: 213
           }
         }));
       }

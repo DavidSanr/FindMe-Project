@@ -24,7 +24,7 @@ export default class App extends Component {
       error: undefined,
       location: null,
       region: null,
-      endCoordinate: { endLatitude: 18.43314801, endLongitude: -69.97395073 },
+      endCoordinate: { Latitude: 18.43314801, Longitude: -69.97395073 },
       setRegion : {}
 
     };
@@ -58,18 +58,25 @@ export default class App extends Component {
     // }
     firebase.initializeApp(config, 'testApp');
 
-    // var data = firebase.app("testApp")
-    //   .database()
-    //   .ref('location/')
-    //   .then(snapshot => {
-    //     snapshot.val()
+    var data = firebase.app("testApp")
+      .database()
+      .ref('location/setRegion')
+      .once('value')
+      .then(snapshot => {
+        var regionValue =snapshot.val();
+        console.log(regionValue.coordinate)
+        this.setState(
+          {
+            endCoordinate: this.regionValue.coordinate
+
+          }         
+        )
+
+        debugger
 
 
-
-    //   });
-
-
-    
+      });
+  
 
 
 
@@ -96,7 +103,7 @@ export default class App extends Component {
       rationale
     ).then(result => {
       console.log("Permission result:", result);
-      return result === true || result === PermissionsAndroid.RESULTS.GRANTED;
+      return result === false || result === PermissionsAndroid.RESULTS.GRANTED;
     });
   };
 
@@ -143,8 +150,8 @@ export default class App extends Component {
         };
         var positionB = {
           coordinate: {
-            latitude: this.state.endCoordinate.endLatitude,
-            longitude: this.state.endCoordinate.endLongitude
+            latitude: this.state.endCoordinate.Latitude,
+            longitude: this.state.endCoordinate.Longitude
           }
         };
         var result = calculateDistance(positionA, positionB);
@@ -161,7 +168,7 @@ export default class App extends Component {
       },
 
       error => Alert.alert(error.message),
-      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+      { enableHighAccuracy: false, timeout: 6000, maximumAge: 1000 }
     );
   };
 
@@ -187,8 +194,8 @@ export default class App extends Component {
         >
           <Circle
             center={{
-              latitude: this.state.endCoordinate.endLatitude,
-              longitude: this.state.endCoordinate.endLongitude,
+              latitude: this.state.endCoordinate.Latitude,
+              longitude: this.state.endCoordinate.Longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421
             }}
