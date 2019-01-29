@@ -58,18 +58,25 @@ export default class App extends Component {
     // }
     firebase.initializeApp(config, 'testApp');
 
-    // var data = firebase.app("testApp")
-    //   .database()
-    //   .ref('location/')
-    //   .then(snapshot => {
-    //     snapshot.val()
+    var data = firebase.app("testApp")
+      .database()
+      .ref('location/setRegion')
+      .once('value')
+      .then(snapshot => {
+        var regionValue =snapshot.val();
+        console.log(regionValue.coordinate)
+        this.setState(
+          {
+            endCoordinate: this.regionValue.coordinate
+
+          }         
+        )
+
+        debugger
 
 
-
-    //   });
-
-
-    
+      });
+  
 
 
 
@@ -96,7 +103,7 @@ export default class App extends Component {
       rationale
     ).then(result => {
       console.log("Permission result:", result);
-      return result === true || result === PermissionsAndroid.RESULTS.GRANTED;
+      return result === false || result === PermissionsAndroid.RESULTS.GRANTED;
     });
   };
 
