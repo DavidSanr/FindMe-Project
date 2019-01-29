@@ -25,7 +25,7 @@ export default class App extends Component {
       location: null,
       region: null,
       endCoordinate: { endLatitude: 18.43314801, endLongitude: -69.97395073 },
-      setRegion : {}
+      setRegion : {latitude : 18.43314801, longitude :  -69.97395073}
 
     };
 
@@ -127,6 +127,13 @@ export default class App extends Component {
       });
 
 
+      this.setState({
+        
+        setRegion : {latitude : setRegion.coordinate.latitude, longitude : setRegion.coordinate.longitude}
+
+      })
+
+
   };
 
   findCoordinates = () => {
@@ -143,16 +150,16 @@ export default class App extends Component {
         };
         var positionB = {
           coordinate: {
-            latitude: this.state.endCoordinate.endLatitude,
-            longitude: this.state.endCoordinate.endLongitude
+            latitude: this.state.setRegion.latitude,
+            longitude: this.state.setRegion.longitude
           }
         };
         var result = calculateDistance(positionA, positionB);
-        if (result <= 10) {
+        if (result <= 25) {
           Alert.alert("Llegaste", "Estas en el punto acordado");
         }
 
-        if (result > 10) {
+        if (result > 25) {
           Alert.alert(
             "No estas...",
             "No te encuentras en la Ubicacion Acordada"
@@ -161,7 +168,7 @@ export default class App extends Component {
       },
 
       error => Alert.alert(error.message),
-      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
+      { enableHighAccuracy: false, timeout: 2000 }
     );
   };
 
@@ -185,15 +192,15 @@ export default class App extends Component {
           showsMyLocationButton= {true}
           onLongPress= { this.setLocation.bind(this)}
         >
-          <Circle
+          {/* <Circle
             center={{
-              latitude: this.state.endCoordinate.endLatitude,
-              longitude: this.state.endCoordinate.endLongitude,
+              latitude: this.state.setRegion.latitude,
+              longitude: this.state.setRegion.longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421
             }}
-            radius={10}
-          />
+            radius={25}
+          /> */}
         </MapView>
 
         <Button
