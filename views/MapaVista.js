@@ -42,14 +42,16 @@ export default class MapaVista extends Component {
       region: {
         longitude: -69.95420197024941, latitude: 18.437380919762777, latitudeDelta: 0.00041889339744471954,
         longitudeDelta: 0.00034030526876449585
-      }
+      },
+
+      currentUser: firebase.auth().currentUser.uid
       
 
     });
 
     
     // firebase.initializeApp(configFirebase,'testapp')
-    var data = firebase.app("testApp")
+    var data = firebase
       .database()
       .ref('location/setRegion')
       .once('value')
@@ -102,7 +104,7 @@ export default class MapaVista extends Component {
     var setRegion = data.nativeEvent;
 
 
-   firebase.app("testApp")
+   firebase
       .database()
       .ref("location/")
       .set({
@@ -198,12 +200,12 @@ export default class MapaVista extends Component {
           accessibilityLabel=""
         />
 
-        <Button
-          onPress={this.setLocation.bind(this)}
+        {/* <Button
+          onPress={Alert.alert(this.state.currentUser)}
           title="set Location"
           color="#541584"
           accessibilityLabel=""
-        />
+        /> */}
       </React.Fragment>
     );
   }

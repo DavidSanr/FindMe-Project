@@ -17,13 +17,12 @@ export default class Login extends React.Component {
     
   }
   handleLogin = () => {
-    const { email, password } = this.state;
-    debugger
-    
+    const { email, password } = this.state;  
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => this.props.navigation.navigate('Main'))
+      .then(() => this.props.navigation.navigate('MapaVista'))
+      .then(() => alert(firebase.auth().currentUser))
       .catch(error => this.setState({ errorMessage: error.message }))
   }
   render() {
@@ -52,7 +51,7 @@ export default class Login extends React.Component {
         <Button title="Login" onPress={this.handleLogin} />
         <Button
           title="Don't have an account? Sign Up"
-          onPress={() => this.props.navigation.navigate('SignUp')}
+          onPress={() => this.props.navigation.navigate('Signup')}
         />
       </View>
     )
