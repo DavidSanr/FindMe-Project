@@ -12,7 +12,7 @@ import MapView, { PROVIDER_GOOGLE, Marker, Circle } from "react-native-maps";
 import { calculateDistance,calDelta } from "../utils/mapUtilis";
 import parseErrorStack from "react-native/Libraries/Core/Devtools/parseErrorStack";
 import { setLocation } from "../utils/api/fetchInformation";
-import configFirebase from '../firebase'
+// import configFirebase from '../firebase'
 import firebase from 'react-native-firebase'
 // import modalUserSettings from './modals/UserSettings'
 
@@ -48,7 +48,7 @@ export default class MapaVista extends Component {
     });
 
     
-    firebase.initializeApp(configFirebase,'testapp')
+    // firebase.initializeApp(configFirebase,'testapp')
     var data = firebase.app("testApp")
       .database()
       .ref('location/setRegion')

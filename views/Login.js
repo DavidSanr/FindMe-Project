@@ -2,7 +2,7 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native'
 import firebase from 'react-native-firebase'
-// import configFirebase from '../firebase'
+// import firebase from '../firebase'
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +18,8 @@ export default class Login extends React.Component {
   }
   handleLogin = () => {
     const { email, password } = this.state;
-
+    debugger
+    
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
