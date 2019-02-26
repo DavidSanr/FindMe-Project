@@ -10,16 +10,12 @@ import {
 } from 'react-native';
 import firebase from "react-native-firebase";
 
-class ModalUserSettings extends Component {
+class ModalUserSettings extends Modal {
   state = {
     modalVisible: false,
   };
 
-  setModalVisible(visible) {
-    this.setState({
-      modalVisible: visible
-    });
-  }
+  
 
 
 
@@ -55,8 +51,8 @@ class ModalUserSettings extends Component {
   render() {
     return (
 
-      <
-      Modal animationType = "fade"
+      <Modal
+       animationType = "fade"
       transparent = {
         false
       }
@@ -75,8 +71,7 @@ class ModalUserSettings extends Component {
 
 
 
-      <
-      /Modal>
+      </Modal>
 
     );
   }

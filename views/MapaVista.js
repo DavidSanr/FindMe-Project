@@ -14,7 +14,7 @@ import parseErrorStack from "react-native/Libraries/Core/Devtools/parseErrorStac
 import { setLocation } from "../utils/api/fetchInformation";
 // import configFirebase from '../firebase'
 import firebase from "react-native-firebase";
-// import modalUserSettings from './modals/UserSettings'
+import modalUserSettings from './modals/UserSettings'
 
 export default class MapaVista extends Component {
  
@@ -27,35 +27,39 @@ export default class MapaVista extends Component {
       location: null,
       region: null,
       endCoordinate: { endLatitude: 18.43314801, endLongitude: -69.97395073 },
-      setRegion: { latitude: 38.43314801, longitude: -65.97395073 }
+      setRegion: { latitude: 38.43314801, longitude: -65.97395073 },
+      modalVisible : false
     };
   }
   
+  componentWillMount() {
   
-  componentDidMount() {
-    this.setState({
-      region: {
-        longitude: -69.95420197024941,
-        latitude: 18.437380919762777,
-        latitudeDelta: 0.00041889339744471954,
-        longitudeDelta: 0.00034030526876449585
-      },
+  this.setState({
+    region: {
+      longitude: -69.95420197024941,
+      latitude: 18.437380919762777,
+      latitudeDelta: 0.00041889339744471954,
+      longitudeDelta: 0.00034030526876449585
+    },
 
-      currentUser: firebase.auth().currentUser.uid
-    });
+    currentUser: firebase.auth().currentUser.uid
+  });
 
-    // firebase.initializeApp(configFirebase,'testapp')
-    firebase
-      .database()
-      .ref(`location/${firebase.auth().currentUser.uid}/setRegion`)
-      .once("value")
-      .then(snapshot => {
-        var regionValue = snapshot.val();
-        console.log(regionValue.coordinate);
-        this.setState({
-          setRegion: this.regionValue.coordinate
-        });
+}
+componentDidMount() {
+  
+  firebase
+    .database()
+    .ref(`location/${firebase.auth().currentUser.uid}/setRegion`)
+    .once("value")
+    .then(snapshot => {
+      var regionValue = snapshot.val();
+      console.log(regionValue.coordinate);
+      this.setState({
+        setRegion: this.regionValue.coordinate
       });
+    });
+    // firebase.initializeApp(configFirebase,'testapp')
   }
 
   async _checkPermissionGps() {
@@ -77,6 +81,12 @@ export default class MapaVista extends Component {
 
   onRegionChange(region) {
     this.setState({ region });
+  }
+
+  setModalVisible() {
+    this.setState({
+      modalVisible:!this.state.modalVisible
+    });
   }
 
   setLocation(data) {
@@ -145,10 +155,14 @@ export default class MapaVista extends Component {
   render() {
     return (
       <React.Fragment>
-        {/* <modalUserSettings>
+        <modalUserSettings
+        visible = {this.state.modalVisible}
+
+        
+        >
 
           
-        </modalUserSettings> */}
+        </modalUserSettings>
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.container}
@@ -180,12 +194,12 @@ export default class MapaVista extends Component {
           accessibilityLabel=""
         />
 
-        {/* <Button
-          onPress={Alert.alert(this.state.currentUser)}
+        <Button
+          onPress={this.setModalVisible}
           title="set Location"
           color="#541584"
           accessibilityLabel=""
-        /> */}
+        />
       </React.Fragment>
     );
   }
