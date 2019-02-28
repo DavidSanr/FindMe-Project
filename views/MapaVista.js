@@ -14,7 +14,7 @@ import parseErrorStack from "react-native/Libraries/Core/Devtools/parseErrorStac
 import { setLocation } from "../utils/api/fetchInformation";
 // import configFirebase from '../firebase'
 import firebase from "react-native-firebase";
-import modalUserSettings from './modals/UserSettings'
+import ModalUserSettings from './modals/UserSettings'
 
 export default class MapaVista extends Component {
  
@@ -46,19 +46,22 @@ export default class MapaVista extends Component {
   });
 
 }
+
+
 componentDidMount() {
-  
   firebase
     .database()
-    .ref(`location/${firebase.auth().currentUser.uid}/setRegion`)
+    .ref(`location/${firebase.auth().currentUser.uid}/`)
     .once("value")
     .then(snapshot => {
       var regionValue = snapshot.val();
-      console.log(regionValue.coordinate);
+      debugger
+      console.log(regionValue.setRegion.coordinate);
       this.setState({
         setRegion: this.regionValue.coordinate
       });
     });
+  
     // firebase.initializeApp(configFirebase,'testapp')
   }
 
@@ -155,14 +158,15 @@ componentDidMount() {
   render() {
     return (
       <React.Fragment>
-        <modalUserSettings
-        visible = {this.state.modalVisible}
-
+        <ModalUserSettings
+        visible = {this.state.modalVisible}      
+        close= {() => this.setModalVisible}
         
-        >
+        />
+        
 
           
-        </modalUserSettings>
+        
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.container}
@@ -195,7 +199,7 @@ componentDidMount() {
         />
 
         <Button
-          onPress={this.setModalVisible}
+          onPress={() => this.setModalVisible()}
           title="set Location"
           color="#541584"
           accessibilityLabel=""
