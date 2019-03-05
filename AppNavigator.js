@@ -6,6 +6,7 @@ import {
 import Login from './views/Login'
 import SignUp from './views/SingUp'
 import MapaVista from './views/MapaVista'
+import AdminView from './views/AdminView';
 
 const RootStack = createStackNavigator({
   Home: {
@@ -17,6 +18,10 @@ const RootStack = createStackNavigator({
   MapaVista:{
     screen: MapaVista
     
+  }
+  ,
+  AdminView:{
+    screen: AdminView
   }
 
 

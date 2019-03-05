@@ -26,8 +26,8 @@ export default class MapaVista extends Component {
       error: undefined,
       location: null,
       region: null,
-      endCoordinate: { endLatitude: 18.43314801, endLongitude: -69.97395073 },
-      setRegion : {latitude : 18.43314801, longitude :  -69.97395073}
+      endCoordinate: null,
+      setRegion : null
 
     };
 
@@ -37,39 +37,49 @@ export default class MapaVista extends Component {
   componentDidMount() {
 
 
+    // function setRol(){
+
+    //   firebase
+    //   .database('/roles').snapshot
+    //   .then( (snapshot) => { snapshot.val.map((e) =>
+        
+        
+        
+        
+        
+    //     ) })
+
+    // };
+
+    let ubicacionConsumida;
+    firebase
+    .database()
+    .ref(`location/${firebase.auth().currentUser.uid}`)
+    .once('value')
+    .then((snapshot) => {
+      ubicacion = snapshot.val();
+      debugger
+    });
+    
+
     this.setState({
 
-      region: {
-        longitude: -69.95420197024941, latitude: 18.437380919762777, latitudeDelta: 0.00041889339744471954,
-        longitudeDelta: 0.00034030526876449585
-      },
+     
 
-      currentUser: firebase.auth().currentUser.uid
+      currentUser: firebase.auth().currentUser.uid,
+      setRegion : this.ubicacionConsumida
+
       
 
     });
 
     
     // firebase.initializeApp(configFirebase,'testapp')
-    var data = firebase
-      .database()
-      .ref('location/setRegion')
-      .once('value')
-      .then(snapshot => {
-        var regionValue =snapshot.val();
-        console.log(regionValue.coordinate)
-        this.setState(
-          {
-            endCoordinate: this.regionValue.coordinate
 
-          }         
-        )
-
-        
-
-
-      });
+    
   }
+
+  
 
 
 
@@ -131,6 +141,7 @@ export default class MapaVista extends Component {
   };
 
   findCoordinates = () => {
+    debugger
     navigator.geolocation.getCurrentPosition(
       position => {
         // this.setState({
@@ -179,7 +190,7 @@ export default class MapaVista extends Component {
           showsMyLocationButton= {true}
           onLongPress= {(e) => this.setLocation(e)}
         >
-         <MapView.Circle
+         {/* <MapView.Circle
         center={{
           latitude: this.state.setRegion.latitude,
           longitude: this.state.setRegion.longitude,
@@ -189,7 +200,7 @@ export default class MapaVista extends Component {
         strokeWidth={2}
         strokeColor="#3399ff"
         fillColor="#80bfff"
-      />
+      /> */}
         
         </MapView>
 
@@ -200,12 +211,14 @@ export default class MapaVista extends Component {
           accessibilityLabel=""
         />
 
-        {/* <Button
-          onPress={Alert.alert(this.state.currentUser)}
+        <Button
+          onPress={() => this.props.navigation.navigate('AdminView')}
+          
           title="set Location"
           color="#541584"
           accessibilityLabel=""
-        /> */}
+        />
+        
       </React.Fragment>
     );
   }
