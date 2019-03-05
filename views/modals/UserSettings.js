@@ -1,46 +1,102 @@
-import React, {Component} from 'react';
-import {Modal, Text, TouchableHighlight, View, Alert} from 'react-native';
+import React, {
+  Component
+} from 'react';
+import {
+  Modal,
+  Text,
+  TouchableHighlight,
+  View,
+  Button,
+  Alert
+} from 'react-native';
+import firebase from "react-native-firebase";
 
-class modalUserSettings extends Component {
+export default class ModalUserSettings extends Component {
   state = {
     modalVisible: false,
+    list:[]
   };
 
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
+  
+componentDidMount(){
+
+this.getAllUsers();
+ 
+  
+
+
+
+}
+
+async getAllUsers() {
+
+  firebase
+    .database()
+    .ref(`users/`)
+    .once("value")
+    .then(snapshot => {
+      var userList = snapshot.val();
+      console.log(regionValue.coordinate);
+      this.setState({
+        userList: this.userList
+      });
+    });
+
+}
+
+clearList() {
+  list = [];
+}
+
+async close() {
+  this.clearList();
+  await this.setState({
+    modalVisible: false,
+    loadingFields: true
+  });
+  await this.clearList();
+  this.props.close();
+}
 
   render() {
     return (
-      <View style={{marginTop: 22}}>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <View style={{marginTop: 22}}>
-            <View>
-              <Text>Hello World!</Text>
 
-              <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text>Hide Modal</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
+      <Modal
+       animationType = "fade"
+      transparent = {
+        false
+      }
+      onShow = {
+        () => this.getAllUsers
+      }
+      visible = {
+        this.props.visible
+      }
 
-        <TouchableHighlight
-          onPress={() => {
-            this.setModalVisible(true);
-          }}>
-          <Text>Show Modal</Text>
-        </TouchableHighlight>
+      onRequestClose ={() => !this.state.modalVisible()}
+    
+      >
+    <Button
+    onPress={() => this.close()}
+          title="close modal"
+          color="#541584"
+          accessibilityLabel=""
+
+          >s
+
+    </Button>
+
+      <View>
+      <Text>
+
+        Hey Modal if open
+      </Text>
+
+
       </View>
+
+      </Modal>
+
     );
   }
 }

@@ -9,15 +9,15 @@ import {
   GeoOptions
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker, Circle } from "react-native-maps";
-import { calculateDistance,calDelta } from "../utils/mapUtilis";
+import { calculateDistance, calDelta } from "../utils/mapUtilis";
 import parseErrorStack from "react-native/Libraries/Core/Devtools/parseErrorStack";
 import { setLocation } from "../utils/api/fetchInformation";
 // import configFirebase from '../firebase'
-import firebase from 'react-native-firebase'
-// import modalUserSettings from './modals/UserSettings'
-
+import firebase from "react-native-firebase";
+import ModalUserSettings from './modals/UserSettings'
 
 export default class MapaVista extends Component {
+ 
   constructor(props) {
     super(props);
 
@@ -30,12 +30,22 @@ export default class MapaVista extends Component {
       setRegion : null
 
     };
-
-    
   }
+  
+  componentWillMount() {
+  
+  this.setState({
+    region: {
+      longitude: -69.95420197024941,
+      latitude: 18.437380919762777,
+      latitudeDelta: 0.00041889339744471954,
+      longitudeDelta: 0.00034030526876449585
+    },
 
-  componentDidMount() {
+    currentUser: firebase.auth().currentUser.uid
+  });
 
+}
 
     // function setRol(){
 
@@ -72,8 +82,7 @@ export default class MapaVista extends Component {
       
 
     });
-
-    
+  
     // firebase.initializeApp(configFirebase,'testapp')
 
     
@@ -101,22 +110,24 @@ export default class MapaVista extends Component {
       console.log("Permission result:", result);
       return result === false || result === PermissionsAndroid.RESULTS.GRANTED;
     });
-  };
+  }
 
   onRegionChange(region) {
     this.setState({ region });
-  };
+  }
 
- 
-  setLocation(data){
+  setModalVisible() {
+    this.setState({
+      modalVisible:!this.state.modalVisible
+    });
+  }
 
-
+  setLocation(data) {
     var setRegion = data.nativeEvent;
 
-
-   firebase
+    firebase
       .database()
-      .ref("location/")
+      .ref(`location/${firebase.auth().currentUser.uid}`)
       .set({
         setRegion
       })
@@ -128,17 +139,15 @@ export default class MapaVista extends Component {
         //error callback
         console.log("error ", error);
       });
-       
-      setRegion = calDelta(setRegion.coordinate.latitude,setRegion.coordinate.longitude,20)
 
-      this.setState({
-        
-        setRegion: {setRegion} }
-
-      )
-
-
-  };
+    setRegion = calDelta(
+      setRegion.coordinate.latitude,
+      setRegion.coordinate.longitude,
+      20
+    );
+    
+    this.setState({ setRegion: setRegion });
+  }
 
   findCoordinates = () => {
     debugger
@@ -177,18 +186,26 @@ export default class MapaVista extends Component {
     );
   };
 
-  
   render() {
     return (
       <React.Fragment>
+        <ModalUserSettings
+        visible = {this.state.modalVisible}      
+        close= {() => this.setModalVisible}
+        
+        />
+        
+
+          
+        
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.container}
           initialRegion={this.state.region}
           showsUserLocation={true}
           onRegionChangeComplete={this.onRegionChange.bind(this)}
-          showsMyLocationButton= {true}
-          onLongPress= {(e) => this.setLocation(e)}
+          showsMyLocationButton={true}
+          onLongPress={e => this.setLocation(e)}
         >
          {/* <MapView.Circle
         center={{
@@ -202,6 +219,9 @@ export default class MapaVista extends Component {
         fillColor="#80bfff"
       /> */}
         
+      /> */}
+
+          <MapView.Marker coordinate={this.state.setRegion} />
         </MapView>
 
         <Button
@@ -211,14 +231,12 @@ export default class MapaVista extends Component {
           accessibilityLabel=""
         />
 
-        <Button
-          onPress={() => this.props.navigation.navigate('AdminView')}
-          
+        {/* <Button
+          onPress={Alert.alert(this.state.currentUser)}
           title="set Location"
           color="#541584"
           accessibilityLabel=""
-        />
-        
+        /> */}
       </React.Fragment>
     );
   }

@@ -8,6 +8,8 @@ import SignUp from './views/SingUp'
 import MapaVista from './views/MapaVista'
 import AdminView from './views/AdminView';
 
+
+
 const RootStack = createStackNavigator({
   Home: {
     screen: Login
@@ -16,7 +18,11 @@ const RootStack = createStackNavigator({
     screen: SignUp
   },
   MapaVista:{
-    screen: MapaVista
+    screen: MapaVista,
+    navigationOptions: () => ({
+			title: ('Mapa Vista'),
+      headerVisible: false,
+      
     
   }
   ,
@@ -26,6 +32,9 @@ const RootStack = createStackNavigator({
 
 
 });
+
+
+
 
 const App = createAppContainer(RootStack);
 
