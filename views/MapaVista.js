@@ -14,7 +14,7 @@ import parseErrorStack from "react-native/Libraries/Core/Devtools/parseErrorStac
 import { setLocation } from "../utils/api/fetchInformation";
 // import configFirebase from '../firebase'
 import firebase from "react-native-firebase";
-import ModalUserSettings from './modals/UserSettings'
+// import ModalUserSettings from './modals/UserSettings'
 
 export default class MapaVista extends Component {
  
@@ -25,7 +25,12 @@ export default class MapaVista extends Component {
       fetchingPosition: false,
       error: undefined,
       location: null,
-      region: null,
+      region: {
+        longitude: -69.95420197024941,
+        latitude: 18.437380919762777,
+        latitudeDelta: 0.00041889339744471954,
+        longitudeDelta: 0.00034030526876449585
+      },
       endCoordinate: null,
       setRegion : null
 
@@ -45,7 +50,7 @@ export default class MapaVista extends Component {
     currentUser: firebase.auth().currentUser.uid
   });
 
-}
+
 
     // function setRol(){
 
@@ -61,14 +66,14 @@ export default class MapaVista extends Component {
 
     // };
 
-    let ubicacionConsumida;
+    let ubicacionConsumida=
     firebase
     .database()
     .ref(`location/${firebase.auth().currentUser.uid}`)
     .once('value')
     .then((snapshot) => {
       ubicacion = snapshot.val();
-      debugger
+      
     });
     
 
@@ -189,14 +194,7 @@ export default class MapaVista extends Component {
   render() {
     return (
       <React.Fragment>
-        <ModalUserSettings
-        visible = {this.state.modalVisible}      
-        close= {() => this.setModalVisible}
-        
-        />
-        
-
-          
+                 
         
         <MapView
           provider={PROVIDER_GOOGLE}
@@ -219,7 +217,7 @@ export default class MapaVista extends Component {
         fillColor="#80bfff"
       /> */}
         
-      /> */}
+      
 
           <MapView.Marker coordinate={this.state.setRegion} />
         </MapView>
@@ -231,12 +229,12 @@ export default class MapaVista extends Component {
           accessibilityLabel=""
         />
 
-        {/* <Button
-          onPress={Alert.alert(this.state.currentUser)}
+        <Button
+          onPress={() => this.props.navigator.navigate('AdminView')}
           title="set Location"
           color="#541584"
           accessibilityLabel=""
-        /> */}
+        />
       </React.Fragment>
     );
   }

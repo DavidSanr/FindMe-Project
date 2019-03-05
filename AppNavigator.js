@@ -24,14 +24,17 @@ const RootStack = createStackNavigator({
       headerVisible: false,
       
     
-  }
+  })
+}
   ,
   AdminView:{
     screen: AdminView
   }
 
+})
 
-});
+
+
 
 
 
