@@ -25,8 +25,9 @@ import {
 } from "../utils/api/fetchInformation";
 // import configFirebase from '../firebase'
 import firebase from "react-native-firebase";
+import withNavigation from "react-navigation"
 
-// import ModalUserSettings from './modals/UserSettings'
+import ModalUserSettings from './modals/UserSettings'
 
 export default class MapaVista extends Component {
 
@@ -47,8 +48,9 @@ export default class MapaVista extends Component {
       setRegion: {
         longitude: -69.95420197024941,
         latitude: 18.437380919762777
-      }
-
+      },
+     modalVisible: false ,
+     usersList : null
     };
   }
 
@@ -75,6 +77,22 @@ export default class MapaVista extends Component {
       }
     });
 
+  let users;
+  let data;
+  debugger
+  firebase
+  .database()
+  .ref('users')
+  .once('value')
+  .then((snapshot) => {
+    data = snapshot.toJSON();
+    debugger    
+    users = Object.keys(data).map((i) => {data[i]
+    });
+    this.setState({           
+      usersList : users    
+    })}
+
 
 
 
@@ -99,8 +117,7 @@ export default class MapaVista extends Component {
 
   componentDidMount() {
 
-    // const rootRef = firebase.database().ref(`location/${this.state.currentUser}`).on();
-    // const itemsRef = rootRef.child('items');
+    
     var _ubicacion;
     var prueba;
     
@@ -242,7 +259,11 @@ export default class MapaVista extends Component {
     return (
        <React.Fragment>
 
-
+      <ModalUserSettings
+      visible = {this.state.modalVisible}
+      usersList = {this.state.usersList}
+      >
+        </ModalUserSettings>
       <MapView 
       provider = {
         PROVIDER_GOOGLE
@@ -298,7 +319,7 @@ export default class MapaVista extends Component {
        />
 
       <Button onPress = {
-        () => this.props.navigator.navigate('AdminView')
+        () => this.setModalVisible()
       }
       title = "set Location"
       color = "#541584"
@@ -326,3 +347,4 @@ const styles = StyleSheet.create({
     marginBottom: 5
   }
 });
+

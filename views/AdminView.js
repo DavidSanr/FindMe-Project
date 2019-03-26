@@ -19,26 +19,72 @@ class AdminView extends Component {
     }
 
 
-    var users = null;
+    
 
   }
 
 
+  renderUserList = () => {
+
+    <Content>
+    { this.users.forEach((u) => {
+       <List>
+         <ListItem avatar>
+           <Left>
+             <Thumbnail source={{ uri: 'https://img.icons8.com/color/1600/circled-user-male-skin-type-1-2.png' }} />
+           </Left>
+           <Body>
+             <Text>{u.email}</Text>
+             <Text note>Doing what you like will always keep you happy . .</Text>
+           </Body>
+           <Right>
+             <Text note>3:43 pm</Text>
+           </Right>
+         </ListItem>
+       </List>
+     })}
+     </Content>
+  }
+
+renderEmptyUserList = () => {
+
+<Content>
+
+  <List>
+  <ListItem avatar>
+    <Left>
+      <Thumbnail source={{ uri: 'https://img.icons8.com/color/1600/circled-user-male-skin-type-1-2.png' }} />
+    </Left>
+    <Body>
+      <Text>Nobody</Text>
+      <Text note>Doing what you like will always keep you happy . .</Text>
+    </Body>
+    <Right>
+      <Text note>3:43 pm</Text>
+    </Right>
+  </ListItem>
+</List>
 
 
-getAllUser() {
+</Content>
+
+}
+
+
+
+componentWillMount(){
+
+
 firebase
 .database()
 .ref('users')
 .once('value')
 .then((snapshot) => {
-  this.users = snapshot.toJSON();
+  var users = snapshot.toJSON();
+  
 
 }
-)
-
-
-}
+)}
 
 
 
@@ -46,24 +92,7 @@ firebase
     return (
       <Container>
         <Header />  
-        <Content>
-       { users.map((u) => {
-          <List>
-            <ListItem avatar>
-              <Left>
-                <Thumbnail source={{ uri: 'https://img.icons8.com/color/1600/circled-user-male-skin-type-1-2.png' }} />
-              </Left>
-              <Body>
-                <Text>{u.email}</Text>
-                <Text note>Doing what you like will always keep you happy . .</Text>
-              </Body>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </ListItem>
-          </List>
-        })}
-        </Content>
+      {this.setState.usersList != undefined  ? this.renderUserList : this.renderEmptyUserList}
       </Container>
     );
   }
