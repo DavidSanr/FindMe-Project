@@ -16,25 +16,19 @@ export default class ModalUserSettings extends Component {
   constructor(props){
     super(props);
     this.state = {
-      modalVisible: this.props.visible,
+    
       list:[],
       userList: null,
+      hearThis : [{key:1,name :'david',email :'david.sanchez@hotmail.com',Date:Date.now},{key: 2,name :'luis',email :'test@test.com',Date:Date.now}],
+      visible : null,
+      
       
     };
     
 
-    
-    
   }
   
-  setUsers(users){
-    
-    this.setState({
-      userList : users
-
-
-    })
-  }
+  
 
   
 
@@ -70,8 +64,6 @@ renderUserList = () =>{
 
 renderEmptyUserlist = () =>{
 
-
-<Content>
       
         return(
          <List>
@@ -80,18 +72,18 @@ renderEmptyUserlist = () =>{
                <Thumbnail source={{ uri: 'https://img.icons8.com/color/1600/circled-user-male-skin-type-1-2.png' }} />
              </Left>
              <Body>
-               <Text>NO USER</Text>
-               <Text note>Doing what you like will always keep you happy . .</Text>
+               <Text>test@test.com </Text>
+               <Text note>Santo Domingo</Text>
              </Body>
              <Right>
-               <Text note>3:43 pm</Text>
+               <Text note>User Register</Text>
              </Right>
            </ListItem>
          </List>
 
-        )
-       
-       </Content>
+        
+)
+      
 
 }
 
@@ -137,12 +129,30 @@ clearList() {
 
 close = () => {
   this.clearList();
-   this.setState({
-    visible: false,
-    loadingFields: true
-  });
+  this.props.closeModal();
  this.clearList();
   this.props.close();
+}
+
+setLocationUser = (userID,date) => {
+var ubicacion = this.props.setLocationUser;
+firebase.database()
+.ref(`location/${userID}`)
+.set({
+  ubicacion
+})
+.then(data => {
+  //success callback
+  debugger
+  console.log("data ", data);
+})
+.catch(error => {
+  //error callback
+  console.log("error ", error);
+});
+
+
+
 }
 
   render() {
@@ -165,11 +175,42 @@ close = () => {
       onRequestClose ={() => !this.state.modalVisible()}
     
       > 
-      <Content>
-    {this.state.userList != undefined ? this.renderUserList : this.renderEmptyUserlist}
-       </Content>
+       <Content>
+          <List>
+        
+      {/* {this.state.userList != undefined ? this.renderUserList : this.renderEmptyUserlist} */}
+      { this.state.hearThis.map((e) => {
+
+        
+      return(
+     
+          
+            <ListItem avatar
+            onLongPress={() => this.setLocationUser(e.name,e.Date)}
+            
+            
+            >
+              <Left>
+                <Thumbnail source={{ uri: 'https://img.icons8.com/color/1600/circled-user-male-skin-type-1-2.png' }} />
+              </Left>
+              <Body>
+                <Text>{e.email}</Text>
+                <Text note>Santo Domingo</Text>
+              </Body>
+              <Right>
+                <Text note>{e.name}</Text>
+              </Right>
+            </ListItem>
+        
+           
+          )
+        })        
+      }
+        </List>
+      
+      </Content>
     <Button
-    onPress={() => this.close}
+    onPress={() => this.props.closeModal()}
           title="close modal"
           color="#541584"
           accessibilityLabel=""
