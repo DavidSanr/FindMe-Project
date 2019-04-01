@@ -111,16 +111,16 @@ async getAllUsers() {
     .ref(`users/`)
     .once("value")
     .then(snapshot => {
-      var data = snapshot.toJSON();
-      var userList = []
-      Object.keys(data).map(i => {
-      console.log(data[i])
-      userList.push(data[i]);
+      var data = snapshot.val();
+      
+      // Object.keys(data).map(i => {
+      // // console.log(data[i])
+      // // userList.push(data[i]);
 
 
-      })
+      // })
       this.setState({
-        userList: userList
+        userList: data
       });
     });
 
@@ -141,7 +141,7 @@ close = () => {
 }
 
 setLocationUser = (userID,date) => {
-var ubicacion = this.props.setLocationUser;
+var ubicacion = this.props.setRegion;
 firebase.database()
 .ref(`location/${userID}`)
 .set({
@@ -163,7 +163,7 @@ firebase.database()
 
   render() {
 
-    var data  = this.props.userList;
+    
 
     return (
 
@@ -191,14 +191,15 @@ firebase.database()
       { 
         
         
-        this.state.userList.map((e) => {
-      
+        // this.state.userList.map((e) => {
+        Object.keys(this.state.userList).map( (e)=> {
+        
         
       return(
      
           
             <ListItem avatar
-            onLongPress={() => this.setLocationUser(e.name,e.Date)}
+            onLongPress={() => this.setLocationUser(e,this.props.setRegion)}
             
             
             >
@@ -206,12 +207,12 @@ firebase.database()
                 <Thumbnail source={{ uri: 'https://img.icons8.com/color/1600/circled-user-male-skin-type-1-2.png' }} />
               </Left>
               <Body>
-                <Text>{e.email}</Text>
+                <Text>{this.state.userList[e].email}</Text>
                 <Text note>Santo Domingo</Text>
               </Body>
-              {/* <Right>
-                <Text note>{e.name}</Text>
-              </Right> */}
+              <Right>
+                <Text note>{this.state.userList[e].status == true ? "OK" : "No llego"}</Text>
+              </Right>
             </ListItem>
         
            
