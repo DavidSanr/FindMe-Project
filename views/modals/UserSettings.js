@@ -18,7 +18,7 @@ export default class ModalUserSettings extends Component {
     this.state = {
     
       list:[],
-      userList: null,
+      userList: [{key:1,name :'david',email :'david.sanchez@hotmail.com',Date:Date.now},{key: 2,name :'luis',email :'test@test.com',Date:Date.now}],
       hearThis : [{key:1,name :'david',email :'david.sanchez@hotmail.com',Date:Date.now},{key: 2,name :'luis',email :'test@test.com',Date:Date.now}],
       visible : null,
       
@@ -90,13 +90,13 @@ renderEmptyUserlist = () =>{
 
 componentWillMount(){
   
-  
+  this.getAllUsers();
   
   }
 
 componentDidMount(){
 
-this.getAllUsers();
+
      
       
     
@@ -111,8 +111,14 @@ async getAllUsers() {
     .ref(`users/`)
     .once("value")
     .then(snapshot => {
-      var userList = snapshot.toJSON();
-      console.log(regionValue.coordinate);
+      var data = snapshot.toJSON();
+      var userList = []
+      Object.keys(data).map(i => {
+      console.log(data[i])
+      userList.push(data[i]);
+
+
+      })
       this.setState({
         userList: userList
       });
@@ -156,6 +162,9 @@ firebase.database()
 }
 
   render() {
+
+    var data  = this.props.userList;
+
     return (
 
       
@@ -179,8 +188,11 @@ firebase.database()
           <List>
         
       {/* {this.state.userList != undefined ? this.renderUserList : this.renderEmptyUserlist} */}
-      { this.state.hearThis.map((e) => {
-
+      { 
+        
+        
+        this.state.userList.map((e) => {
+      
         
       return(
      
@@ -197,9 +209,9 @@ firebase.database()
                 <Text>{e.email}</Text>
                 <Text note>Santo Domingo</Text>
               </Body>
-              <Right>
+              {/* <Right>
                 <Text note>{e.name}</Text>
-              </Right>
+              </Right> */}
             </ListItem>
         
            
