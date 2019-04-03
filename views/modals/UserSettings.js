@@ -18,7 +18,7 @@ export default class ModalUserSettings extends Component {
     this.state = {
     
       list:[],
-      userList: [{key:1,name :'david',email :'david.sanchez@hotmail.com',Date:Date.now},{key: 2,name :'luis',email :'test@test.com',Date:Date.now}],
+      userList: {hola :{key:1,name :'david',email :'david.sanchez@hotmail.com',Date:Date.now,status:undefined},tu : {key: 2,name :'luis',email :'test@test.com',Date:Date.now,status:true}},
       hearThis : [{key:1,name :'david',email :'david.sanchez@hotmail.com',Date:Date.now},{key: 2,name :'luis',email :'test@test.com',Date:Date.now}],
       visible : null,
       
@@ -109,7 +109,7 @@ componentDidMount(){
 
 
 
-async getAllUsers() {
+ getAllUsers = async() => {
 
   firebase
     .database()
@@ -148,7 +148,7 @@ setLocationUser = (userID,date) => {
 var ubicacion = this.props.setRegion;
 firebase.database()
 .ref(`location/${userID}`)
-.set({
+.update({
   ubicacion
 })
 .then(data => {
@@ -189,6 +189,18 @@ firebase.database()
     
       > 
        <Content>
+         <Header
+         
+        >
+        <Right>
+          <Button
+          onPress = {() => this.getAllUsers()}
+          title= "Actualizar"
+          >
+
+          </Button>
+        </Right>
+         </Header>
           <List>
         
       {/* {this.state.userList != undefined ? this.renderUserList : this.renderEmptyUserlist} */}
@@ -197,8 +209,15 @@ firebase.database()
         
         // this.state.userList.map((e) => {
         Object.keys(this.state.userList).map( (e)=> {
-        
-        
+          var ubicacion = false;
+          console.log(Object.getOwnPropertyNames(this.state.userList[e]))
+          if(this.state.userList[e].hasOwnProperty("UserLocation")){
+            console.log(this.state.userList.UserLocation.status)
+            if(this.state.userList.UserLocation.status == true ){
+
+              ubicacion = true
+            }
+          }
       return(
      
           
@@ -212,10 +231,10 @@ firebase.database()
               </Left>
               <Body>
                 <Text>{this.state.userList[e].email}</Text>
-                <Text note>Santo Domingo</Text>
+                <Text note>Santo Domingo </Text>
               </Body>
               <Right>
-                <Text note>{this.state.userList[e].status == true ? "OK" : "No llego"}</Text>
+                <Text note>{ubicacion == true ? "OK" : "No llego"}</Text>
               </Right>
             </ListItem>
         

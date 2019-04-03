@@ -127,26 +127,26 @@ export default class MapaVista extends Component {
       });
 
 
-      firebase
-      .database()
-      .ref('users')
-      .once('value')
-      .then((snapshot) => {
-        var data = snapshot.val(); 
-        var test = [];
-        // debugger      
-        // var users = Object.keys(data).map((i) => {data[i]
-        // // test.push(data[i])
-        // //   debugger
-        // //   console.log(test)  
+      // firebase
+      // .database()
+      // .ref('users')
+      // .once('value')
+      // .then((snapshot) => {
+      //   var data = snapshot.val(); 
+      //   var test = [];
+      //   // debugger      
+      //   // var users = Object.keys(data).map((i) => {data[i]
+      //   // // test.push(data[i])
+      //   // //   debugger
+      //   // //   console.log(test)  
           
-        //   })
-      this.setState({           
-            usersList : data
+      //   //   })
+      // this.setState({           
+      //       usersList : data
         
-        });
+      //   });
     
-      })
+      // })
 
 
       
@@ -309,7 +309,7 @@ export default class MapaVista extends Component {
 
       <ModalUserSettings
       visible = {this.state.modalVisible}
-      usersList = {this.state.usersList}
+      // usersList = {this.state.usersList}
       setRegion = {this.state.setRegion}
       closeModal={() => this.setState({modalVisible: false})}
       >
