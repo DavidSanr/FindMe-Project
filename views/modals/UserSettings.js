@@ -97,12 +97,17 @@ componentWillMount(){
 componentDidMount(){
 
 
+
+
      
       
     
     
     
     }
+
+
+
 
 async getAllUsers() {
 
@@ -116,7 +121,6 @@ async getAllUsers() {
       // Object.keys(data).map(i => {
       // // console.log(data[i])
       // // userList.push(data[i]);
-
 
       // })
       this.setState({

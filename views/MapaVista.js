@@ -49,6 +49,7 @@ export default class MapaVista extends Component {
         longitude: -69.95420197024941,
         latitude: 18.437380919762777
       },
+    UserLocation : null,
      modalVisible: false ,
      usersList : null
     }
@@ -149,7 +150,7 @@ export default class MapaVista extends Component {
 
 
       
-      
+      // this.interval = () => {setInterval(this.findCoordinates(),10000)}
         
     
 
@@ -205,6 +206,34 @@ export default class MapaVista extends Component {
     });
   }
 
+  setUserLocation(Location,status){
+    var UserLocation = Location
+
+    firebase
+      .database()
+      .ref(`users/${this.state.currentUser}/UserLocation`)
+      .set({
+        UserLocation,
+        status
+      })
+      .then(data => {
+        //success callback
+        console.log("data ", data);
+      })
+      .catch(error => {
+        //error callback
+        console.log("error ", error);
+      });
+
+   
+    
+
+    this.setState({
+      UserLocation: UserLocation
+    });
+
+
+  }
   setLocation(data) {
     var setRegion = data.nativeEvent;
 
@@ -235,7 +264,7 @@ export default class MapaVista extends Component {
   }
 
   findCoordinates = () => {
-    debugger
+    
     navigator.geolocation.getCurrentPosition(
       position => {
         // this.setState({
@@ -255,7 +284,7 @@ export default class MapaVista extends Component {
         };
         var result = calculateDistance(positionA, positionB);
         if (result <= 25) {
-          Alert.alert("Llegaste", "Estas en el punto acordado");
+          this.setUserLocation(positionA,true);
         }
 
         if (result > 25) {
@@ -263,6 +292,7 @@ export default class MapaVista extends Component {
             "No estas...",
             "No te encuentras en la Ubicacion Acordada"
           );
+          this.setUserLocation(positionA,false);
         }
       },
 
