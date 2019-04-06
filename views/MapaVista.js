@@ -51,7 +51,8 @@ export default class MapaVista extends Component {
       },
     UserLocation : null,
      modalVisible: false ,
-     usersList : null
+     usersList : null,
+     toAssing : null
     }
   }
 
@@ -114,7 +115,7 @@ export default class MapaVista extends Component {
       .once('value')
       .then((snapshot) => {
         _ubicacion = snapshot.toJSON();
-        prueba = _ubicacion.setRegion.coordinate;
+        prueba = _ubicacion.ubicacion.coordinate;
         if(prueba != null){
         this.setState(
           {
@@ -237,20 +238,20 @@ export default class MapaVista extends Component {
   setLocation(data) {
     var setRegion = data.nativeEvent;
 
-    firebase
-      .database()
-      .ref(`location/${this.state.currentUser}`)
-      .set({
-        setRegion
-      })
-      .then(data => {
-        //success callback
-        console.log("data ", data);
-      })
-      .catch(error => {
-        //error callback
-        console.log("error ", error);
-      });
+    // firebase
+    //   .database()
+    //   .ref(`location/${this.state.currentUser}`)
+    //   .set({
+    //     setRegion
+    //   })
+    //   .then(data => {
+    //     //success callback
+    //     console.log("data ", data);
+    //   })
+    //   .catch(error => {
+    //     //error callback
+    //     console.log("error ", error);
+    //   });
 
     setRegion = calDelta(
       setRegion.coordinate.latitude,
@@ -259,7 +260,7 @@ export default class MapaVista extends Component {
     );
 
     this.setState({
-      setRegion: setRegion
+      toAssing: setRegion
     });
   }
 
@@ -308,7 +309,7 @@ export default class MapaVista extends Component {
       <ModalUserSettings
       visible = {this.state.modalVisible}
       // usersList = {this.state.usersList}
-      setRegion = {this.state.setRegion}
+      toAssing = {this.state.toAssing}
       closeModal={() => this.setState({modalVisible: false})}
       >
         </ModalUserSettings>

@@ -185,7 +185,7 @@ firebase.database()
         this.props.visible
       }
 
-      onRequestClose ={() => !this.state.modalVisible()}
+      onRequestClose ={() => this.props.closeModal()}
     
       > 
        <Content>
@@ -224,7 +224,7 @@ firebase.database()
      
           
             <ListItem avatar
-            onLongPress={() => this.setLocationUser(e,this.props.setRegion)}
+            onLongPress={() => this.setLocationUser(e,this.props.toAssing)}
             
             
             >
