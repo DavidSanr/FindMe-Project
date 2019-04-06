@@ -211,8 +211,8 @@ export default class MapaVista extends Component {
 
     firebase
       .database()
-      .ref(`users/${this.state.currentUser}/UserLocation`)
-      .set({
+      .ref(`users/${this.state.currentUser}`)
+      .update({
         UserLocation,
         status
       })
@@ -287,12 +287,10 @@ export default class MapaVista extends Component {
           this.setUserLocation(positionA,true);
         }
 
-        if (result > 25) {
-          Alert.alert(
-            "No estas...",
-            "No te encuentras en la Ubicacion Acordada"
-          );
+        if (result >= 25) {
+         
           this.setUserLocation(positionA,false);
+          console.log("sucess")
         }
       },
 

@@ -210,10 +210,12 @@ firebase.database()
         // this.state.userList.map((e) => {
         Object.keys(this.state.userList).map( (e)=> {
           var ubicacion = false;
+          
           console.log(Object.getOwnPropertyNames(this.state.userList[e]))
-          if(this.state.userList[e].hasOwnProperty("UserLocation")){
-            console.log(this.state.userList.UserLocation.status)
-            if(this.state.userList.UserLocation.status == true ){
+          if(this.state.userList[e].hasOwnProperty("status")){
+            if(this.state.userList[e].status == true ){
+             
+              console.log(this.state.userList[e].status)
 
               ubicacion = true
             }
