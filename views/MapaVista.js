@@ -28,6 +28,7 @@ import firebase from "react-native-firebase";
 import withNavigation from "react-navigation"
 
 import ModalUserSettings from './modals/UserSettings'
+import testAppDbcontext from '../entities/dbcontext'
 
 export default class MapaVista extends Component {
 
@@ -51,8 +52,11 @@ export default class MapaVista extends Component {
       },
     UserLocation : null,
      modalVisible: false ,
-     usersList : null
+     usersList : null,
+     currentUser : null
     }
+
+
   }
 
   setCurrentUser() {
@@ -90,18 +94,19 @@ export default class MapaVista extends Component {
   }
   
   setRol = () => {
+  let userDb = new testAppDbcontext('users');
+  let data = userDb.getAllObject();
 
-      firebase
-      .database('/roles').snapshot
-      .then( (snapshot) => { snapshot.val.map((e) =>{
-        console.log(e);
-        debugger
-        
+  let user = Object.keys(data).filter(e => { e == this.state.currentUser})
+  console.log(user);
+
+    
+    
+
+      
 
       }
-        ) })
-
-    };
+        
   componentDidMount() {
 
     
@@ -125,6 +130,9 @@ export default class MapaVista extends Component {
         }
         
       });
+
+
+      this.setRol()
 
 
       // firebase
@@ -327,8 +335,8 @@ export default class MapaVista extends Component {
       showsUserLocation = {
         true
       }
-      onRegionChangeComplete = {
-        this.onRegionChange.bind(this)
+      onRegionChangeComplete = { 
+       (region) => this.onRegionChange(region)
       }
       showsMyLocationButton = {
         true
