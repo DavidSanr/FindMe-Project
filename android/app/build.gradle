@@ -106,6 +106,17 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+
+        signingConfigs {
+        release {
+            // if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
+                storeFile file("release.keystore")
+                storePassword "password"
+                keyAlias "keyalias"
+                keyPassword "password"
+            
+        }
+    }
     }
     splits {
         abi {
@@ -119,6 +130,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -138,6 +150,14 @@ android {
 
 dependencies {
     compile project(':react-native-maps')
+    compile project(':react-native-firebase')
+    compile project(':react-native-gesture-handler')
+    implementation project(':react-native-firebase')
+    implementation "com.google.android.gms:play-services-base:16.0.1"
+    implementation "com.google.firebase:firebase-core:16.0.6"
+    implementation "com.google.firebase:firebase-database:16.0.5"
+    implementation "com.google.firebase:firebase-auth:16.1.0"
+    implementation project(':react-native-maps')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:support-v4:27.1.0'
@@ -151,3 +171,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+apply plugin: 'com.google.gms.google-services'
